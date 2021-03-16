@@ -7,10 +7,11 @@ A small program for simulated simple cellular automata
 
 import pygame, random
 import numpy as np
+import matplotlib.pyplot as plt
 
 SCREEN_SIZE = (1200,800) #Desired Screen Size (Not actual screen size)
 STEP_TIME = .25
-GRID_SIZE = (300,200)
+GRID_SIZE = (50,50)
 LIVE_COLOR = (0,160,0)
 DEAD_COLOR = (255,255,255)
 BACKGROUND_COLOR = (160,160,160)
@@ -33,7 +34,7 @@ class Game():
     def __init__(self, gridSize, rule):
 
         pygame.init()
-        pygame.display.set_caption("Conway's Game of Life")
+        pygame.display.set_caption("Automata Simulator")
 
         if POPULATE:
             a = np.random.choice(2, size=gridSize[0]*gridSize[1], p=[.9, .1])
@@ -89,6 +90,10 @@ class Game():
                     self.makeInitialCheckList()
                     self.makeDisplay()
                 self._pause = not self._pause
+
+            if event.type == pygame.KEYDOWN and\
+               event.key == pygame.K_e:
+                self.exportImage()
 
 
             # Clear the world
@@ -228,6 +233,11 @@ class Game():
 
     def isRunning(self):
         return self._RUNNING
+
+    def exportImage(self):
+        array = pygame.surfarray.array3d(self._display)
+        array = array.swapaxes(0,1)
+        plt.imsave("image.png", array)
 
 class Grid():
     """Models the pixel grid display of rows and columns"""
