@@ -9,14 +9,15 @@ import pygame, random
 import numpy as np
 import matplotlib.pyplot as plt
 
-SCREEN_SIZE = (1200,800) #Desired Screen Size (Not actual screen size)
+SCREEN_SIZE = (1000,600) #Desired Screen Size (Not actual screen size)
 STEP_TIME = .25
-GRID_SIZE = (50,50)
-LIVE_COLOR = (0,160,0)
+GRID_SIZE = (100,100)
+LIVE_COLOR = (221,160,221)#(0,160,0)
 DEAD_COLOR = (255,255,255)
 BACKGROUND_COLOR = (160,160,160)
 BORDERS = False
-POPULATE = True
+POPULATE = False
+STROBE = True
 
 COLORS = [DEAD_COLOR, LIVE_COLOR]
 
@@ -27,7 +28,9 @@ COLORS = [DEAD_COLOR, LIVE_COLOR]
 # Game of Life: B3/S23
 # Life without Death: B3/S012345678
 # Interesting Rule: B2/S35 -- glider [[0,1,0],[1,0,0],[1,0,0],[0,0,1]]
-RULE = "B12345/S467"
+# Interesting Rule 2: B73648/S3810246
+# B1278/S234567
+RULE = "B1357/S1357"
 
 class Game():
 
@@ -37,7 +40,7 @@ class Game():
         pygame.display.set_caption("Automata Simulator")
 
         if POPULATE:
-            a = np.random.choice(2, size=gridSize[0]*gridSize[1], p=[.9, .1])
+            a = np.random.choice(2, size=gridSize[0]*gridSize[1], p=[.95, .05])
             array = a.reshape(gridSize)
         else:
             array = np.zeros(gridSize)
@@ -215,13 +218,21 @@ class Game():
         self._checkList = set(self._newCheckList)
 
     def update(self):
-        ticks = self._gameClock.get_time() / 1000
+        ticks = self._gameClock.get_time() /1000
+        if STROBE:
+            COLORS[0] = self.getRandomColor()
+            COLORS[1] = self.getRandomColor()
         if not self._pause:
             if self._timer <= 0:
                 self.updateGrid()
                 self._timer = self._stepTime
             else:
                 self._timer -= ticks
+
+    def getRandomColor(self):
+        def getColor():
+            return random.randint(0,255)
+        return (getColor(), getColor(), getColor())
 
     def runGameLoop(self):
         while self.isRunning():
