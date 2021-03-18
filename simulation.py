@@ -17,7 +17,7 @@ DEAD_COLOR = (255,255,255)
 BACKGROUND_COLOR = (160,160,160)
 BORDERS = False
 POPULATE = False
-STROBE = True
+STROBE = False
 
 COLORS = [DEAD_COLOR, LIVE_COLOR]
 
@@ -159,16 +159,17 @@ class Game():
         self._image = s
 
     def makeInitialCheckList(self):
-        self._checkList = []
+        self._checkList = {}
         for row in range(len(self._array)):
             for column in range(len(self._array[row])):
                 neighbors = self.getNeighbors((row, column))
                 state = self._array[row][column]
                 if state==1:
-                    self._checkList.append((row, column))
-                    self._checkList.extend(neighbors)
-        self._checkList = set(self._checkList)
-                
+                    for n in neighbors:
+                        if n in self._checkList:
+                            self._checkList[n] += 1
+                        else:
+                            self._checkList[n] = 1
 
     def getNeighbors(self, pos):
         row, column = pos
@@ -194,28 +195,32 @@ class Game():
         return alive
 
     def updateGrid(self):
-        self._newCheckList = []
-        tempArray = np.zeros(self._array.shape)
+        self._newCheckList = {}
+        self._tempArray = np.zeros(self._array.shape)
         self._image.fill(COLORS[0])
-        for row, column in self._checkList:
-                neighbors = self.getNeighbors((row, column))
-                num = self.getLivingNeighborCount(neighbors)
+        for coords, count in self._checkList.items():
+            if count in self._rules[1] or count in self._rules[0]:
+                row, column = coords
                 state = self._array[row][column]
                 # Survive
-                if state==1 and num in self._rules[1]:
-                    tempArray[row][column] = 1
-                    self._image.set_at((row, column), COLORS[1])
-                    self._newCheckList.append((row, column))
-                    self._newCheckList.extend(neighbors)
+                if state==1 and count in self._rules[1]:
+                    self.makeAlive(row, column)
                 # Birth (come to life)
-                elif state==0 and num in self._rules[0]:
-                    tempArray[row][column] = 1
-                    self._image.set_at((row, column), COLORS[1])
-                    self._newCheckList.append((row, column))
-                    self._newCheckList.extend(neighbors)
-        self._array = tempArray
+                elif state==0 and count in self._rules[0]:
+                    self.makeAlive(row, column)
+        self._array = self._tempArray
         self.scaleDisplay()
-        self._checkList = set(self._newCheckList)
+        self._checkList = self._newCheckList
+
+    def makeAlive(self, row, column):
+        self._tempArray[row][column] = 1
+        self._image.set_at((row, column), COLORS[1])
+        neighbors = self.getNeighbors((row, column))
+        for n in neighbors:
+            if n in self._newCheckList:
+                self._newCheckList[n] += 1
+            else:
+                self._newCheckList[n] = 1
 
     def update(self):
         ticks = self._gameClock.get_time() /1000
