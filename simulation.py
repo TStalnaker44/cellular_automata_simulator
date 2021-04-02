@@ -15,8 +15,8 @@ GRID_SIZE = (100,100)
 LIVE_COLOR = (221,160,221)#(0,160,0)
 DEAD_COLOR = (255,255,255)
 BACKGROUND_COLOR = (160,160,160)
-BORDERS = False
-POPULATE = False
+BORDERS = True
+POPULATE = True
 STROBE = False
 
 COLORS = [DEAD_COLOR, LIVE_COLOR]
@@ -131,7 +131,7 @@ class Game():
                 column = x // self._tileDims[0]
                 row = y // self._tileDims[1]
                 # Check if Control Key is down
-                state = pygame.key.get_mods()% pygame.KMOD_CTRL == 0
+                state = pygame.key.get_mods()% pygame.KMOD_CTRL != 0
                 self._array[column][row] = state
                 self._image.set_at((column, row), COLORS[state])
                 self.scaleDisplay()
