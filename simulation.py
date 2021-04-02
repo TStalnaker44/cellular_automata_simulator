@@ -16,7 +16,7 @@ LIVE_COLOR = (221,160,221)#(0,160,0)
 DEAD_COLOR = (255,255,255)
 BACKGROUND_COLOR = (160,160,160)
 BORDERS = True
-POPULATE = True
+POPULATE = False
 STROBE = False
 
 COLORS = [DEAD_COLOR, LIVE_COLOR]
@@ -25,12 +25,15 @@ COLORS = [DEAD_COLOR, LIVE_COLOR]
 #      -B1357/S1357 (from Wikipedia)
 #      -B147/S4
 #      -B12345/S467
+#      -B146/S147
 # Game of Life: B3/S23
 # Life without Death: B3/S012345678
 # Interesting Rule: B2/S35 -- glider [[0,1,0],[1,0,0],[1,0,0],[0,0,1]]
 # Interesting Rule 2: B73648/S3810246
+# Ripples: B123467/S
+# Replicator without Death: B1/S1234567
 # B1278/S234567
-RULE = "B1357/S1357"
+RULE = "random"
 
 class Game():
 
@@ -131,7 +134,7 @@ class Game():
                 column = x // self._tileDims[0]
                 row = y // self._tileDims[1]
                 # Check if Control Key is down
-                state = pygame.key.get_mods()% pygame.KMOD_CTRL != 0
+                state = pygame.key.get_mods() & pygame.KMOD_CTRL == 0
                 self._array[column][row] = state
                 self._image.set_at((column, row), COLORS[state])
                 self.scaleDisplay()
