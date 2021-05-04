@@ -1,6 +1,12 @@
 # Cellular Automata Simulator
 Generalized program for visualizing different cellular automata rules.  Rules are written in RLE format.
 
+# Required Dependencies
+Before you can run the Cellular Automata Simulator, you must first install pygame.
+```bash
+pip install pygame
+```
+
 # Running the Program
 ```bash
 py simulation.py
