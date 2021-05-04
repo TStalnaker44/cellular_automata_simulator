@@ -2,9 +2,12 @@
 Generalized program for visualizing different cellular automata rules.  Rules are written in RLE format.
 
 # Required Dependencies
-Before you can run the Cellular Automata Simulator, you must first install pygame.
+Before you can run the Cellular Automata Simulator, you must first install pygame and numpy.
 ```bash
 pip install pygame
+```
+```bash
+pip install numpy
 ```
 
 # Running the Program
