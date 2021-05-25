@@ -11,11 +11,11 @@ import matplotlib.pyplot as plt
 
 SCREEN_SIZE = (1000,600) #Desired Screen Size (Not actual screen size)
 STEP_TIME = .25
-GRID_SIZE = (100,100)
-LIVE_COLOR = (221,160,221)#(0,160,0)
+GRID_SIZE = (500,500)
+LIVE_COLOR = (120,0,0)#(0,160,0)
 DEAD_COLOR = (255,255,255)
 BACKGROUND_COLOR = (160,160,160)
-BORDERS = True
+BORDERS = False
 POPULATE = False
 STROBE = False
 
@@ -33,7 +33,7 @@ COLORS = [DEAD_COLOR, LIVE_COLOR]
 # Ripples: B123467/S
 # Replicator without Death: B1/S1234567
 # B1278/S234567
-RULE = "random"
+RULE = "B16482/S8512"
 
 class Game():
 
